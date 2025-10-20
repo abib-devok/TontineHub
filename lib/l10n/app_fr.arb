@@ -1,0 +1,11 @@
+{
+  "@@locale": "fr",
+  "welcomeMessage": "Bienvenue sur TontineHub",
+  "createAccountPrompt": "Créez un compte pour commencer à gérer vos tontines.",
+  "phoneNumberHint": "Numéro de téléphone (+221)",
+  "emailHint": "Adresse e-mail",
+  "passwordHint": "Mot de passe",
+  "confirmPasswordHint": "Confirmer le mot de passe",
+  "registerButton": "S'inscrire",
+  "alreadyHaveAccount": "Déjà un compte ? Connectez-vous"
+}
