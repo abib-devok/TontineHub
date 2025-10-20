@@ -27,6 +27,7 @@ dependencies:
   pdf: ^3.11.3
   mockito: ^5.5.1
   cupertino_icons: ^1.0.2
+  flutter_dotenv: ^5.1.0
   flutter_tts: ^3.8.3
 
 dev_dependencies:
@@ -39,3 +40,4 @@ flutter:
 
   assets:
     - assets/animations/
+    - .env

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Importer le package
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tontine_hub/core/theme/app_theme.dart';
 import 'package:tontine_hub/l10n/app_localizations.dart';
@@ -15,9 +16,13 @@ import 'ui/screens/auth_wrapper.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Charger les variables d'environnement
+  await dotenv.load(fileName: ".env");
+
+  // Initialiser Supabase avec les variables d'environnement
   await Supabase.initialize(
-    url: 'YOUR_SUPABASE_URL',
-    anonKey: 'YOUR_SUPABASE_ANON_KEY',
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
   runApp(MyApp());
@@ -53,7 +58,6 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.system,
-          // Configuration de la localisation
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: AuthWrapper(),
