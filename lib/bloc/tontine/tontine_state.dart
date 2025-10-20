@@ -30,6 +30,9 @@ class TontinesLoaded extends TontineState {
   List<Object> get props => [tontines];
 }
 
+// Nouvel état pour confirmer que l'utilisateur a quitté la tontine
+class TontineLeft extends TontineState {}
+
 class TontineFailure extends TontineState {
   final String error;
 

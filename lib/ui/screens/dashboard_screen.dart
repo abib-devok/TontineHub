@@ -5,7 +5,9 @@ import 'package:tontine_hub/bloc/auth/auth_event.dart';
 import 'package:tontine_hub/bloc/tontine/tontine_bloc.dart';
 import 'package:tontine_hub/bloc/tontine/tontine_event.dart';
 import 'package:tontine_hub/bloc/tontine/tontine_state.dart';
-import 'package:tontine_hub/ui/screens/create_tontine_screen.dart'; // Placeholder
+import 'package:tontine_hub/ui/screens/create_tontine_screen.dart';
+import 'package:tontine_hub/ui/screens/reports_screen.dart'; // Importer l'écran des rapports
+import 'package:tontine_hub/ui/screens/tontine_detail_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -16,7 +18,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    // Charger les tontines de l'utilisateur au démarrage de l'écran
     context.read<TontineBloc>().add(LoadUserTontinesEvent());
   }
 
@@ -27,9 +28,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: const Text('Tableau de Bord'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.analytics),
+            tooltip: 'Voir les rapports',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => ReportsScreen()),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Déclencher l'événement de déconnexion
               context.read<AuthBloc>().add(LogoutEvent());
             },
           ),
@@ -43,17 +52,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
             if (state.tontines.isEmpty) {
               return const Center(child: Text("Vous n'avez pas encore de tontine."));
             }
-            // Afficher la liste des tontines
             return ListView.builder(
               itemCount: state.tontines.length,
               itemBuilder: (context, index) {
                 final tontine = state.tontines[index];
                 return ListTile(
                   title: Text(tontine.name),
-                  subtitle: Text("Propriétaire: ${tontine.ownerId}"), // À améliorer
+                  subtitle: Text("Montant: ${tontine.rulesJson?['montant'] ?? 'N/A'} CFA"),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    // Naviguer vers les détails de la tontine
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => TontineDetailScreen(tontine: tontine),
+                      ),
+                    );
                   },
                 );
               },

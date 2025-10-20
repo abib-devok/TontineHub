@@ -11,6 +11,7 @@ class TontineBloc extends Bloc<TontineEvent, TontineState> {
         super(TontineInitial()) {
     on<CreateTontineEvent>(_onCreateTontine);
     on<LoadUserTontinesEvent>(_onLoadUserTontines);
+    on<LeaveTontineEvent>(_onLeaveTontine); // Ajouter le gestionnaire
   }
 
   Future<void> _onCreateTontine(
@@ -37,6 +38,22 @@ class TontineBloc extends Bloc<TontineEvent, TontineState> {
     try {
       final tontines = await _tontineRepository.getUserTontines();
       emit(TontinesLoaded(tontines: tontines));
+    } catch (e) {
+      emit(TontineFailure(error: e.toString()));
+    }
+  }
+
+  // Nouveau gestionnaire pour l'événement LeaveTontineEvent
+  Future<void> _onLeaveTontine(
+    LeaveTontineEvent event,
+    Emitter<TontineState> emit,
+  ) async {
+    emit(TontineLoading());
+    try {
+      await _tontineRepository.leaveTontine(event.tontineId);
+      emit(TontineLeft());
+      // Après avoir quitté, recharger la liste des tontines de l'utilisateur
+      add(LoadUserTontinesEvent());
     } catch (e) {
       emit(TontineFailure(error: e.toString()));
     }

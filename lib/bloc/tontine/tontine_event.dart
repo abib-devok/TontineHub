@@ -18,3 +18,13 @@ class CreateTontineEvent extends TontineEvent {
 }
 
 class LoadUserTontinesEvent extends TontineEvent {}
+
+// Nouvel événement pour quitter une tontine
+class LeaveTontineEvent extends TontineEvent {
+  final String tontineId;
+
+  const LeaveTontineEvent({required this.tontineId});
+
+  @override
+  List<Object> get props => [tontineId];
+}
