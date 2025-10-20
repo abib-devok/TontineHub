@@ -6,7 +6,8 @@ import 'package:tontine_hub/bloc/tontine/tontine_bloc.dart';
 import 'package:tontine_hub/bloc/tontine/tontine_event.dart';
 import 'package:tontine_hub/bloc/tontine/tontine_state.dart';
 import 'package:tontine_hub/ui/screens/create_tontine_screen.dart';
-import 'package:tontine_hub/ui/screens/reports_screen.dart'; // Importer l'écran des rapports
+import 'package:tontine_hub/ui/screens/profile_screen.dart'; // Importer l'écran de profil
+import 'package:tontine_hub/ui/screens/reports_screen.dart';
 import 'package:tontine_hub/ui/screens/tontine_detail_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -27,6 +28,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: const Text('Tableau de Bord'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            tooltip: 'Voir le profil',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => ProfileScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.analytics),
             tooltip: 'Voir les rapports',

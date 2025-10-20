@@ -4,7 +4,10 @@ import '../models/tontine_model.dart';
 const bool DEV_MODE = true;
 
 class TontineRepository {
-  final SupabaseClient _supabaseClient = Supabase.instance.client;
+  final SupabaseClient _supabaseClient;
+
+  TontineRepository({SupabaseClient? supabaseClient})
+      : _supabaseClient = supabaseClient ?? Supabase.instance.client;
 
   Future<TontineModel> createTontine({
     required String name,
@@ -34,6 +37,9 @@ class TontineRepository {
           .select()
           .single();
 
+      // Ajouter automatiquement le créateur comme membre
+      await joinTontine(response['id']);
+
       return TontineModel.fromJson(response);
     }
   }
@@ -45,15 +51,7 @@ class TontineRepository {
         TontineModel(id: 'mock_tontine_2', name: 'Tontine de Test 2', ownerId: 'mock_user_id', rulesJson: {'montant': 10000}),
       ];
     } else {
-      final user = _supabaseClient.auth.currentUser;
-      if (user == null) {
-        throw Exception('Utilisateur non authentifié');
-      }
-
-      final response = await _supabaseClient
-          .from('tontines')
-          .select()
-          .eq('owner_id', user.id);
+      final response = await _supabaseClient.rpc('get_user_tontines');
 
       return (response as List)
           .map((tontine) => TontineModel.fromJson(tontine))
@@ -61,20 +59,33 @@ class TontineRepository {
     }
   }
 
-  // Nouvelle méthode pour quitter une tontine
-  Future<void> leaveTontine(String tontineId) async {
+  Future<void> joinTontine(String tontineId) async {
     if (DEV_MODE) {
-      print('L\'utilisateur a quitté la tontine mock: $tontineId');
-      // Simule une opération réussie
+      print('Utilisateur a rejoint la tontine mock: $tontineId');
       return;
     } else {
       final user = _supabaseClient.auth.currentUser;
-      if (user == null) {
-        throw Exception('Utilisateur non authentifié');
-      }
-      // La logique réelle impliquerait de retirer l'utilisateur de la table des membres
-      // Pour cet exemple, nous simulons simplement une opération.
-      print('Logique de suppression de la tontine $tontineId pour l\'utilisateur ${user.id} à implémenter.');
+      if (user == null) throw Exception('Utilisateur non authentifié');
+
+      await _supabaseClient.from('tontine_members').insert({
+        'tontine_id': tontineId,
+        'user_id': user.id,
+      });
+    }
+  }
+
+  Future<void> leaveTontine(String tontineId) async {
+    if (DEV_MODE) {
+      print('Utilisateur a quitté la tontine mock: $tontineId');
+      return;
+    } else {
+      final user = _supabaseClient.auth.currentUser;
+      if (user == null) throw Exception('Utilisateur non authentifié');
+
+      await _supabaseClient
+          .from('tontine_members')
+          .delete()
+          .match({'tontine_id': tontineId, 'user_id': user.id});
     }
   }
 }
