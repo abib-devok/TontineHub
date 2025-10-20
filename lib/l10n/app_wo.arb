@@ -1,0 +1,11 @@
+{
+  "@@locale": "wo",
+  "welcomeMessage": "Dalal ak jàmm ci TontineHub",
+  "createAccountPrompt": "Ubbil kont ngir door a saytu say tontin.",
+  "phoneNumberHint": "Sa nimero telefon (+221)",
+  "emailHint": "Sa adaresu imel",
+  "passwordHint": "Batu jàll",
+  "confirmPasswordHint": "Dëggal batu jàll bi",
+  "registerButton": "Bindu",
+  "alreadyHaveAccount": "Am nga kont ba pare ? Boolu"
+}
